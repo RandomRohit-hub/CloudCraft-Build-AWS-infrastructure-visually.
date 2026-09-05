@@ -1,0 +1,120 @@
+name: Quality & Tests
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "**.md"
+      - "docs/**"
+      - ".vscode/**"
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ─── Quality gates (parallel) ──────────────────────────────────
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
+      - run: npm run lint --workspace=apps/backend
+      - run: npm run lint --workspace=apps/frontend
+
+  typecheck:
+    name: Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
+      - run: npm run typecheck
+
+  # ─── Build ─────────────────────────────────────────────────────
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
+      - run: npm run build
+
+      - uses: actions/upload-artifact@v6
+        with:
+          name: build-output
+          path: |
+            packages/shared/dist
+            apps/backend/dist
+            apps/frontend/dist
+          retention-days: 1
+
+  # ─── Tests (need build artifacts) ──────────────────────────────
+  unit-tests:
+    name: Unit Tests
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
+
+      - uses: actions/download-artifact@v7
+        with:
+          name: build-output
+
+      - run: mkdir -p test-results
+
+      - name: Run Unit Tests
+        run: npx vitest run --coverage --exclude 'e2e/**' --reporter=default --reporter=github-actions --reporter=junit --outputFile.junit=test-results/unit.xml
+
+      - name: Unit Test Summary
+        if: always()
+        uses: test-summary/action@v2
+        with:
+          paths: test-results/unit.xml
+
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 7
+
+  e2e-tests:
+    name: E2E Tests
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup
+
+      - uses: actions/download-artifact@v7
+        with:
+          name: build-output
+
+      - name: Install E2E dependencies
+        run: cd e2e && npm ci
+
+      - name: Install Playwright
+        run: cd e2e && npx playwright install --with-deps chromium
+
+      - run: mkdir -p test-results
+
+      - name: Run E2E Tests
+        timeout-minutes: 15
+        run: cd e2e && npx playwright test
+
+      - name: E2E Test Summary
+        if: always()
+        uses: test-summary/action@v2
+        with:
+          paths: test-results/e2e.xml
+
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: playwright-report
+          path: e2e/playwright-report/
+          retention-days: 7
