@@ -78,17 +78,25 @@ function DesignCanvasInner({
   const rfNodes: Node[] = useMemo(() => {
     return nodes.map((node) => {
       let nodeType = 'designResourceNode';
-      if (['vpc', 'public_subnet', 'private_subnet'].includes(node.type)) {
+      const isContainer = ['vpc', 'public_subnet', 'private_subnet'].includes(node.type);
+      const isSg = node.type === 'security_group';
+      if (isContainer) {
         nodeType = 'designContainerNode';
-      } else if (node.type === 'security_group') {
+      } else if (isSg) {
         nodeType = 'designSecurityGroupNode';
       }
+
+      const width = isContainer ? 340 : isSg ? 260 : 230;
+      const height = isContainer ? 190 : isSg ? 150 : 85;
 
       return {
         id: node.id,
         type: nodeType,
         position: node.position,
         selected: node.id === selectedNodeId,
+        width,
+        height,
+        style: { width, height, visibility: 'visible' },
         data: {
           node,
           isHighlighted: node.id === highlightedNodeId,
@@ -107,6 +115,8 @@ function DesignCanvasInner({
         id: conn.id,
         source: conn.source,
         target: conn.target,
+        sourceHandle: (conn as any).sourceHandle ?? 'right',
+        targetHandle: (conn as any).targetHandle ?? 'left',
         type: 'smoothstep',
         animated: true,
         selected: isSelected,

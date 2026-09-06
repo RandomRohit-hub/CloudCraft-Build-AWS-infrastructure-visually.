@@ -43,9 +43,8 @@
   stroke: #f97316;
 }
 
-.react-flow__edge-text {
-  font-size: 10px;
-  fill: #737373;
+.react-flow__node {
+  visibility: visible;
 }
 
 /* ─── Node cards ─────────────────────────────────────────── */

@@ -1,30 +1,36 @@
-# InfraGraph
+# CloudCraft
 
-[![CI](https://github.com/manimovassagh/infragraph/actions/workflows/aws-architect-ci.yml/badge.svg)](https://github.com/manimovassagh/infragraph/actions/workflows/aws-architect-ci.yml)
-[![Release](https://img.shields.io/github/v/release/manimovassagh/infragraph?color=blue)](https://github.com/manimovassagh/infragraph/releases)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)](https://react.dev/)
 [![Node](https://img.shields.io/badge/Node.js-22-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
 [![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white)](docker-compose.yml)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](https://github.com/manimovassagh/infragraph/pulls)
 
-Visualize your Infrastructure-as-Code as interactive architecture diagrams. Upload Terraform state files, HCL source, CloudFormation templates, or CDK-synthesized output — InfraGraph auto-detects your cloud provider and IaC tool, then renders a live, zoomable canvas with VPCs, subnets, and resources.
+Build, design, and visualize AWS cloud infrastructure visually. CloudCraft allows you to design cloud architectures interactively in **Design Mode (Draw Mode)** and visualize your Infrastructure-as-Code (Terraform, CloudFormation, CDK) as live, zoomable architecture diagrams.
 
-![InfraGraph Landing Page](docs/infragraph-landing.png)
+### Design Mode (Draw Architecture Visually)
+Design production AWS cloud architectures with drag-and-drop components, live relationship validation, instant starter templates, and configuration inspection.
 
-![InfraGraph Canvas](docs/infragraph-canvas.png)
+![CloudCraft Design Mode](docs/screenshots/design-mode.png)
 
-![InfraGraph Documentation](docs/infragraph-docs.png)
+### Landing Page
+Modern futuristic interface with direct IaC file upload, one-click sample architecture explorers, and visual design launcher.
 
-### AI Infrastructure Advisor
+![CloudCraft Landing Page](docs/screenshots/landing.png)
 
-![AI Chat Page](docs/screenshots/ai/02-ai-page-conversation.png)
+### Architecture Visualizer Canvas
+Auto-detects IaC tool and cloud provider (AWS, Azure, GCP), rendering interactive diagrams with nested VPCs, subnets, and dependencies.
 
-![AI Canvas Panel](docs/screenshots/ai/06-canvas-ai-panel-conversation.png)
+![CloudCraft Canvas](docs/screenshots/canvas.png)
+
+### Documentation & Guides
+Integrated documentation with multi-cloud architecture guides, security best practices, and API references.
+
+![CloudCraft Documentation](docs/screenshots/docs.png)
 
 ## Features
 
+- **Design Mode (Draw Mode)** — Visually design and architect AWS cloud infrastructure with drag-and-drop components (VPC, Subnets, EC2, RDS, ALB, S3, Security Groups), real-time connection validation, starter templates (3-Tier Web App, Serverless REST API, Container Platform), and inspector configuration panel
 - **Multi-IaC** — Supports Terraform (`.tfstate`, `.tf`), AWS CloudFormation (JSON/YAML), and AWS CDK (synthesized templates)
 - **Multi-cloud** — AWS (20+), Azure (12+), and GCP (11+) resource types with branded icons
 - **GitHub Integration** — Connect your GitHub account, browse repos (including private), scan for IaC projects, and visualize directly
